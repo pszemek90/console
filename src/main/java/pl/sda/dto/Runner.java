@@ -1,5 +1,6 @@
 package pl.sda.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "Runner")
 public class Runner {

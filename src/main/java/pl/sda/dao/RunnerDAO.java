@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.List;
+import java.util.Optional;
 
 public class RunnerDAO implements DAO<Runner>{
     private final String PERSISTENCE_UNIT_NAME;
@@ -27,34 +28,38 @@ public class RunnerDAO implements DAO<Runner>{
     }
 
     @Override
-    public Runner read(int id) {
+    public Optional<Runner> read(int id) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        Runner runner = entityManager.find(Runner.class, id);
-        entityManager.getTransaction().commit();
-        return runner;
+        Optional<Runner> optionalRunner = Optional.ofNullable(entityManager.find(Runner.class, id));
+        entityManager.close();
+        entityManagerFactory.close();
+        return optionalRunner;
     }
 
     @Override
     public List<Runner> readAll() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
         List<Runner> runners = entityManager.createQuery("SELECT r FROM Runner r", Runner.class).getResultList();
-        entityManager.getTransaction().commit();
         entityManager.close();
         entityManagerFactory.close();
         return runners;
     }
 
     @Override
-    public int update(int id) {//TODO: robić update konkretnych rzeczy
-//        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-//        EntityManager entityManager = entityManagerFactory.createEntityManager();
-//        entityManager.getTransaction().begin();
-//        entityManager.
-        return 0;
+    public void update(int id, Runner newRunner) {//TODO: robić update konkretnych rzeczy
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        Runner oldRunner = entityManager.find(Runner.class, id);
+        oldRunner.setFirstName(newRunner.getFirstName());
+        oldRunner.setLastName(newRunner.getLastName());
+        oldRunner.setBestTime(newRunner.getBestTime());
+        oldRunner.setCurrentTime(newRunner.getCurrentTime());
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        entityManagerFactory.close();
     }
 
     @Override
@@ -65,5 +70,7 @@ public class RunnerDAO implements DAO<Runner>{
         Runner runner = entityManager.find(Runner.class, id);
         entityManager.remove(runner);
         entityManager.getTransaction().commit();
+        entityManager.close();
+        entityManagerFactory.close();
     }
 }

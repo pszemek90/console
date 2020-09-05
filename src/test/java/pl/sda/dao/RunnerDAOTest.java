@@ -7,6 +7,8 @@ import pl.sda.dto.Runner;
 import javax.persistence.Persistence;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,9 +32,9 @@ class RunnerDAOTest {
     @Test
     void shouldReadRunner() {
         //when
-        Runner runner = runnerDAO.read(1);
+        Optional<Runner> optionalRunner = runnerDAO.read(1);
         //then
-        assertEquals(1, runner.getId());
+        assertEquals(1, optionalRunner.map(Runner::getId).orElseThrow(NoSuchElementException::new));
     }
 
     @Test

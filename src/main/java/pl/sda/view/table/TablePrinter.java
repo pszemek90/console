@@ -11,14 +11,14 @@ public class TablePrinter<T> {
     private List<T> data;
     private List<ColumnPrinter> columns = new ArrayList<>();
 
-    public TablePrinter withData(List<T> list) {
+    public TablePrinter<T> withData(List<T> list) {
         // only first MAX_TABLE_SIZE rows are printed
         data = list.subList(0, Math.min(list.size(), MAX_TABLE_SIZE));
         return this;
     }
 
-    public TablePrinter withColumn(String headerName, Function<T, String> getValueFunction) {
-        columns.add(new ColumnPrinter(headerName, getValueFunction));
+    public TablePrinter<T> withColumn(String headerName, Function<T, String> getValueFunction) {
+        columns.add(new ColumnPrinter<T>(headerName, getValueFunction));
         return this;
     }
 
@@ -75,11 +75,11 @@ public class TablePrinter<T> {
     }
 
 
-    private static class ColumnPrinter {
+    private static class ColumnPrinter<T> {
         private String header;
-        private Function getValueFunction;
+        private Function<T, String> getValueFunction;
 
-        public ColumnPrinter(String header, Function getValueFunction) {
+        public ColumnPrinter(String header, Function<T, String> getValueFunction) {
             this.header = header;
             this.getValueFunction = getValueFunction;
         }

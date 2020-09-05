@@ -4,16 +4,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.sda.dto.Runner;
 
-import javax.persistence.Persistence;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static pl.sda.dao.TestPersistenceUnitName.PERSISTENCE_UNIT_NAME;
 
 class RunnerDAOTest {
-    private final String PERSISTENCE_UNIT_NAME = "test-db";
     private RunnerDAO runnerDAO;
 
     @BeforeEach

@@ -11,7 +11,6 @@ import java.util.Optional;
 public class RunnerDAO implements DAO<Runner>{
     private final String PERSISTENCE_UNIT_NAME;
 
-
     public RunnerDAO(String PERSISTENCE_UNIT_NAME) {
         this.PERSISTENCE_UNIT_NAME = PERSISTENCE_UNIT_NAME;
     }

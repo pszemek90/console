@@ -10,14 +10,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.sda.dao.TestPersistenceUnitName.PERSISTENCE_UNIT_NAME;
+import static pl.sda.dao.TestPersistenceUnitName.TEST_PERSISTENCE_UNIT_NAME;
 
 class RunnerDAOTest {
     private RunnerDAO runnerDAO;
 
     @BeforeEach
     void setUp() {
-        runnerDAO = new RunnerDAO(PERSISTENCE_UNIT_NAME);
+        runnerDAO = new RunnerDAO(TEST_PERSISTENCE_UNIT_NAME);
     }
 
     @Test

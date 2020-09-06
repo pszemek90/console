@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -29,5 +30,9 @@ public class Runner {
         this.lastName = lastName;
         this.bestTime = bestTime;
         this.currentTime = currentTime;
+    }
+
+    public Optional<LocalTime> getOptionalCurrentTime(){
+        return Optional.ofNullable(currentTime);
     }
 }

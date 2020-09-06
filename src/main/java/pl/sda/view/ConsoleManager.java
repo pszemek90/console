@@ -1,11 +1,17 @@
 package pl.sda.view;
 
+import pl.sda.dao.PersistenceUnitName;
+import pl.sda.dao.RunnerDAO;
+import pl.sda.dto.Runner;
+
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleManager {
 
     private RunnerManager runnerManager = new RunnerManager();
+    private RunnerDAO runnerDAO = new RunnerDAO(PersistenceUnitName.PERSISTENCE_UNIT_NAME);
 
     public void start() {
         char userChoice = ' ';
@@ -40,11 +46,12 @@ public class ConsoleManager {
     private void executeAction(char userChoice) {
         switch (userChoice) {
             case '1':
-                runnerManager.printList();
+                List<Runner> runners = runnerManager.fetchRunners(runnerDAO);
+                runnerManager.printList(runners);
                 pressEnterKeyToContinue();
                 break;
             case '2':
-                runnerManager.addEmployee();
+                runnerManager.addRunner();
 
         }
     }

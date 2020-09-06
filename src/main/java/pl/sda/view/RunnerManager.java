@@ -1,14 +1,11 @@
 package pl.sda.view;
 
-import pl.sda.dao.PersistenceUnitName;
 import pl.sda.dao.RunnerDAO;
-import pl.sda.dto.Employee;
 import pl.sda.dto.Runner;
 import pl.sda.view.table.TablePrinter;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 

@@ -1,5 +1,6 @@
 package pl.sda.dao;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.sda.dto.Runner;
@@ -10,14 +11,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.sda.dao.TestPersistenceUnitName.TEST_PERSISTENCE_UNIT_NAME;
 
 class RunnerDAOTest {
     private RunnerDAO runnerDAO;
 
     @BeforeEach
     void setUp() {
-        runnerDAO = new RunnerDAO(TEST_PERSISTENCE_UNIT_NAME);
+        TestEntityManagerFactoryService.start();
+        runnerDAO = new RunnerDAO(TestEntityManagerFactoryService.getInstance());
     }
 
     @Test
@@ -55,5 +56,10 @@ class RunnerDAOTest {
         }
         //then
         assertNull(runnerDAO.read(1));
+    }
+
+    @AfterEach
+    void tearDown() {
+        TestEntityManagerFactoryService.close();
     }
 }

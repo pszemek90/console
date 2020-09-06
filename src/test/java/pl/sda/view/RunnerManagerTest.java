@@ -1,9 +1,10 @@
 package pl.sda.view;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.sda.dao.RunnerDAO;
-import pl.sda.dao.TestPersistenceUnitName;
+import pl.sda.dao.TestEntityManagerFactoryService;
 import pl.sda.dto.Runner;
 
 import java.util.List;
@@ -14,7 +15,8 @@ class RunnerManagerTest {
 
     @BeforeEach
     void setUp() {
-        runnerDAO = new RunnerDAO(TestPersistenceUnitName.TEST_PERSISTENCE_UNIT_NAME);
+        TestEntityManagerFactoryService.start();
+        runnerDAO = new RunnerDAO(TestEntityManagerFactoryService.getInstance());
         runnerManager = new RunnerManager();
     }
 
@@ -24,5 +26,10 @@ class RunnerManagerTest {
         List<Runner> runners = runnerManager.fetchRunners(runnerDAO);
         //when
         runnerManager.printList(runners);
+    }
+
+    @AfterEach
+    void tearDown() {
+        TestEntityManagerFactoryService.close();
     }
 }

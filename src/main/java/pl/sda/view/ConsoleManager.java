@@ -1,6 +1,6 @@
 package pl.sda.view;
 
-import pl.sda.dao.PersistenceUnitName;
+import pl.sda.dao.EntityManagerFactoryService;
 import pl.sda.dao.RunnerDAO;
 import pl.sda.dto.Runner;
 
@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class ConsoleManager {
 
     private RunnerManager runnerManager = new RunnerManager();
-    private RunnerDAO runnerDAO = new RunnerDAO(PersistenceUnitName.PERSISTENCE_UNIT_NAME);
+    private RunnerDAO runnerDAO = new RunnerDAO(EntityManagerFactoryService.getInstance());
 
     public void start() {
         char userChoice = ' ';

@@ -38,9 +38,9 @@ class RunnerDAOTest {
     }
 
     @Test
-    void shouldCreateRunner() {
+    void shouldNotCreateRunnerWithoutFirstName() {
         //when
-        Runner runner = new Runner("Jan", "Kowalski", LocalTime.parse("00:32:15"), null);
+        Runner runner = new Runner(null, "Kowalski", LocalTime.parse("00:32:15"), null);
         runnerDAO.create(runner);
         //then
         assertNotNull(runner);
@@ -56,6 +56,24 @@ class RunnerDAOTest {
         }
         //then
         assertNull(runnerDAO.read(1));
+    }
+
+    @Test
+    void shouldUpdateRunner(){
+        //given
+        Runner newRunner = new Runner("Adam", "Rzepa", LocalTime.parse("00:28:00"),null);
+        int id = 2;
+        //when
+        runnerDAO.update(id, newRunner);
+    }
+
+    @Test
+    void shouldFailUpdatingWithNullName(){
+        //given
+        Runner newRunner = new Runner(null, "Rzepa", LocalTime.parse("00:15:45"), null);
+        int id = 2;
+        //when
+        runnerDAO.update(id, newRunner);
     }
 
     @AfterEach

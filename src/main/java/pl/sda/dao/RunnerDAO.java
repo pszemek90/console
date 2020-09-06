@@ -4,6 +4,7 @@ import pl.sda.dto.Runner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +18,14 @@ public class RunnerDAO implements DAO<Runner>{
     @Override
     public void create(Runner runner) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try{
         entityManager.getTransaction().begin();
         entityManager.persist(runner);
         entityManager.getTransaction().commit();
+        }catch (PersistenceException exception){
+            entityManager.getTransaction().rollback();
+            System.out.println("Couldn't create a user");
+        }
         entityManager.close();
     }
 
@@ -40,7 +46,7 @@ public class RunnerDAO implements DAO<Runner>{
     }
 
     @Override
-    public void update(int id, Runner newRunner) {//TODO: robić update konkretnych rzeczy
+    public void update(int id, Runner newRunner) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Runner oldRunner = entityManager.find(Runner.class, id);

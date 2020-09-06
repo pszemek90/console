@@ -9,7 +9,6 @@ import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "Runner")
 public class Runner {

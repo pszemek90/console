@@ -9,7 +9,7 @@ public class TablePrinter<T> {
     private static final int MAX_COLUMN_SIZE = 15;
     private static final int MAX_TABLE_SIZE = 100;
     private List<T> data;
-    private List<ColumnPrinter> columns = new ArrayList<>();
+    private List<ColumnPrinter<T>> columns = new ArrayList<>();
 
     public TablePrinter<T> withData(List<T> list) {
         // only first MAX_TABLE_SIZE rows are printed
@@ -51,7 +51,7 @@ public class TablePrinter<T> {
 
     private void generateHeaderRow(StringBuilder stringBuilder) {
         stringBuilder.append("|");
-        for (ColumnPrinter columnPrinter : columns) {
+        for (ColumnPrinter<T> columnPrinter : columns) {
             stringBuilder.append(decorateValue(columnPrinter.header));
             stringBuilder.append("|");
         }
@@ -61,7 +61,7 @@ public class TablePrinter<T> {
 
     private void generateRow(StringBuilder stringBuilder, T dataRow) {
         stringBuilder.append("|");
-        for (ColumnPrinter columnPrinter : columns) {
+        for (ColumnPrinter<T> columnPrinter : columns) {
             stringBuilder.append(decorateValue((String) columnPrinter.getValueFunction.apply(dataRow)));
             stringBuilder.append("|");
         }

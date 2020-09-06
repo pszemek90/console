@@ -13,8 +13,8 @@ public class Main {
 //        RunnerDAO runnerDAO = new RunnerDAO();
 //        Runner runner = new Runner("sdas", "asda", LocalTime.NOON, LocalTime.NOON);
 //        runnerDAO.create(runner, "jpa.hibernate");
-//        ConsoleManager consoleManager = new ConsoleManager();
-//        consoleManager.start();
+        ConsoleManager consoleManager = new ConsoleManager();
+        consoleManager.start();
     }
 
 

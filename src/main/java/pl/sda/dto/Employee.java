@@ -12,7 +12,7 @@ import java.util.List;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(name = "first_name", nullable = false)
     private String firstName;
     @Column(name = "last_name", nullable = false)
@@ -23,7 +23,7 @@ public class Employee {
     private Integer salary;
     @Column(name = "birth_year")
     private Integer birthYear;
-    @ManyToMany(mappedBy = "employees")
+    @ManyToMany(mappedBy = "employees", fetch = FetchType.EAGER)
     private List<Task> tasks;
 
     public Employee(String firstName, String lastName, String position, Integer salary, Integer birthYear) {

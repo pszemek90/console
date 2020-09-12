@@ -1,8 +1,6 @@
 package pl.sda.dao;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import pl.sda.dto.Employee;
 
 import javax.persistence.RollbackException;
@@ -14,20 +12,33 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EmployeeDAOTest {
     private EmployeeDAO employeeDAO;
+    private Integer id;
+
+    @BeforeAll
+    static void beforeAll() {
+        TestEntityManagerFactoryService.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        TestEntityManagerFactoryService.close();
+    }
 
     @BeforeEach
     void setUp() {
-        TestEntityManagerFactoryService.start();
         employeeDAO = new EmployeeDAO(TestEntityManagerFactoryService.getInstance());
+        Employee employee = new Employee("Jan", "Kowalski", "Tester", 4000, 1995);
+        employeeDAO.create(employee);
+        id = employee.getId();
     }
 
     @Test
     void shouldCreateEmployee() {
         //when
         Employee employee = new Employee("Adam", "Nowak", "Developer", 6000, 1980);
-        employeeDAO.create(employee);
+        boolean result = employeeDAO.create(employee);
         //then
-        assertNotNull(employee);
+        assertTrue(result);
     }
 
     @Test
@@ -41,9 +52,10 @@ class EmployeeDAOTest {
     @Test
     void shouldReadEmployee() {
         //when
-        Optional<Employee> optionalEmployee = employeeDAO.read(1);
+        Optional<Employee> optionalEmployee = employeeDAO.read(id);
         //then
-        assertEquals(1, optionalEmployee.map(Employee::getId).orElseThrow(NoSuchElementException::new));
+        assertEquals(id, optionalEmployee.map(Employee::getId)
+                .orElseThrow(NoSuchElementException::new));
     }
 
     @Test
@@ -56,21 +68,18 @@ class EmployeeDAOTest {
     }
 
     @Test
-    void shouldUpdateEmployee(){
+    void shouldUpdateEmployee() {
         //given
         Employee newEmployee = new Employee("Adrian", "Nowak", "Developer", 8000, 1980);
-        int id = 1;
         //when
         employeeDAO.update(id, newEmployee);
     }
 
     @Test
-    void shouldFailUpdatingWithNullName(){
+    void shouldFailUpdatingWithNullName() {
         //given
         Employee newEmployee = new Employee(null, "Nowak", "Developer", 6000, 1980);
-        int id = 1;
         //when
-//        employeeDAO.update(id, newEmployee);
         assertThrows(RollbackException.class, () -> employeeDAO.update(id, newEmployee));
     }
 
@@ -78,16 +87,16 @@ class EmployeeDAOTest {
     void shouldDeleteEmployee() {
         //when
         try {
-            employeeDAO.delete(1);
+            employeeDAO.delete(id);
         } catch (IllegalArgumentException e) {
             System.out.println("No such entity");
         }
         //then
-        assertEquals(Optional.empty(),employeeDAO.read(1));
+        assertEquals(Optional.empty(), employeeDAO.read(id));
     }
 
     @AfterEach
     void tearDown() {
-        TestEntityManagerFactoryService.close();
+        employeeDAO.deleteAll();
     }
 }

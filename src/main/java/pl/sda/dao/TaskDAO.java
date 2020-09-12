@@ -1,10 +1,12 @@
 package pl.sda.dao;
 
+import pl.sda.dto.Employee;
 import pl.sda.dto.Task;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class TaskDAO implements DAO<Task> {
     }
 
     @Override
-    public Optional<Task> read(int id) {
+    public Optional<Task> read(Integer id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Optional<Task> optionalTask = Optional.ofNullable(entityManager.find(Task.class, id));
         entityManager.close();
@@ -49,7 +51,7 @@ public class TaskDAO implements DAO<Task> {
     }
 
     @Override
-    public void update(int id, Task newTask) {
+    public void update(Integer id, Task newTask) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Task oldTask = entityManager.find(Task.class, id);
@@ -58,12 +60,40 @@ public class TaskDAO implements DAO<Task> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Task task = entityManager.find(Task.class, id);
         entityManager.remove(task);
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+
+    public void deleteAll() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.createQuery("DELETE FROM Task").executeUpdate();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public void addEmployeeToTask(int employeeId, int taskId){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        Employee employee = entityManager.find(Employee.class, employeeId);
+        Task task = entityManager.find(Task.class, taskId);
+        List<Employee> employees = task.getEmployees();
+        employees.add(employee);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public List<Task> searchTaskByEmployee(Integer id){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        TypedQuery<Task> query = entityManager.createQuery("select distinct t from Task t join t.employees employees where employees.id = :id", Task.class);
+        query.setParameter("id", id);
+        List<Task> tasks = query.getResultList();
+        entityManager.close();
+        return tasks;
     }
 }

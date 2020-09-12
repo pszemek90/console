@@ -46,8 +46,8 @@ public class ConsoleManager {
     private void executeAction(char userChoice) {
         switch (userChoice) {
             case '1':
-                List<Employee> runners = employeeManager.fetchEmployees(employeeDAO);
-                employeeManager.printList(runners);
+                List<Employee> employees = employeeManager.fetchEmployees(employeeDAO);
+                employeeManager.printList(employees);
                 pressEnterKeyToContinue();
                 break;
             case '2':

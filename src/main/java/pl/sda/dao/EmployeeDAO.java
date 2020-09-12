@@ -5,10 +5,11 @@ import pl.sda.dto.Employee;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeDAO implements DAO<Employee>{
+public class EmployeeDAO implements DAO<Employee> {
     private EntityManagerFactory entityManagerFactory;
 
     public EmployeeDAO(EntityManagerFactory entityManagerFactory) {
@@ -33,7 +34,7 @@ public class EmployeeDAO implements DAO<Employee>{
     }
 
     @Override
-    public Optional<Employee> read(int id) {
+    public Optional<Employee> read(Integer id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Optional<Employee> optionalEmployee = Optional.ofNullable(entityManager.find(Employee.class, id));
         entityManager.close();
@@ -49,7 +50,7 @@ public class EmployeeDAO implements DAO<Employee>{
     }
 
     @Override
-    public void update(int id, Employee newEmployee) {
+    public void update(Integer id, Employee newEmployee) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Employee oldEmployee = entityManager.find(Employee.class, id);
@@ -62,8 +63,27 @@ public class EmployeeDAO implements DAO<Employee>{
         entityManager.close();
     }
 
+    public void deleteAll() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.createQuery("DELETE FROM Employee").executeUpdate();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public int searchEmployeeByName(String firstName, String lastName) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        TypedQuery<Employee> query = entityManager
+                .createQuery("SELECT e FROM Employee e WHERE e.firstName = :firstName AND e.lastName = :lastName", Employee.class);
+        query.setParameter("firstName", firstName);
+        query.setParameter("lastName", lastName);
+        Employee employee = query.getSingleResult();
+        entityManager.close();
+        return employee.getId();
+    }
+
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Employee employee = entityManager.find(Employee.class, id);

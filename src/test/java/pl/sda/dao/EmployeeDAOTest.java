@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.sda.dto.Employee;
 
+import javax.persistence.RollbackException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -18,6 +19,15 @@ class EmployeeDAOTest {
     void setUp() {
         TestEntityManagerFactoryService.start();
         employeeDAO = new EmployeeDAO(TestEntityManagerFactoryService.getInstance());
+    }
+
+    @Test
+    void shouldCreateEmployee() {
+        //when
+        Employee employee = new Employee("Adam", "Nowak", "Developer", 6000, 1980);
+        employeeDAO.create(employee);
+        //then
+        assertNotNull(employee);
     }
 
     @Test
@@ -46,22 +56,10 @@ class EmployeeDAOTest {
     }
 
     @Test
-    void shouldDeleteEmployee() {
-        //when
-        try {
-            employeeDAO.delete(1);
-        } catch (IllegalArgumentException e) {
-            System.out.println("No such entity");
-        }
-        //then
-        assertNull(employeeDAO.read(1));
-    }
-
-    @Test
     void shouldUpdateEmployee(){
         //given
         Employee newEmployee = new Employee("Adrian", "Nowak", "Developer", 8000, 1980);
-        int id = 2;
+        int id = 1;
         //when
         employeeDAO.update(id, newEmployee);
     }
@@ -70,9 +68,22 @@ class EmployeeDAOTest {
     void shouldFailUpdatingWithNullName(){
         //given
         Employee newEmployee = new Employee(null, "Nowak", "Developer", 6000, 1980);
-        int id = 2;
+        int id = 1;
         //when
-        employeeDAO.update(id, newEmployee);
+//        employeeDAO.update(id, newEmployee);
+        assertThrows(RollbackException.class, () -> employeeDAO.update(id, newEmployee));
+    }
+
+    @Test
+    void shouldDeleteEmployee() {
+        //when
+        try {
+            employeeDAO.delete(1);
+        } catch (IllegalArgumentException e) {
+            System.out.println("No such entity");
+        }
+        //then
+        assertEquals(Optional.empty(),employeeDAO.read(1));
     }
 
     @AfterEach

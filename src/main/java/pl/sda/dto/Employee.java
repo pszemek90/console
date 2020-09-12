@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -12,14 +13,18 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+    @Column(nullable = false)
     private String position;
+    @Column(nullable = false)
     private Integer salary;
     @Column(name = "birth_year")
     private Integer birthYear;
+    @ManyToMany(mappedBy = "employees")
+    private List<Task> tasks;
 
     public Employee(String firstName, String lastName, String position, Integer salary, Integer birthYear) {
         this.firstName = firstName;

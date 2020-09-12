@@ -1,8 +1,6 @@
 package pl.sda.dao;
 
 import pl.sda.dto.Employee;
-import pl.sda.dto.Runner;
-import pl.sda.dto.Task;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -26,7 +24,7 @@ public class EmployeeDAO implements DAO<Employee>{
             entityManager.getTransaction().commit();
         } catch (PersistenceException exception) {
             entityManager.getTransaction().rollback();
-            System.out.println("Couldn't create a task");
+            System.out.println("Couldn't create an employee");
             entityManager.close();
             return false;
         }

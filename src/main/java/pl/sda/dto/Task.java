@@ -7,8 +7,11 @@ import java.util.List;
 public class Task {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String description;
     @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(name = "employee_task",

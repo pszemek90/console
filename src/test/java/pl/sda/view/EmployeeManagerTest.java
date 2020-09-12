@@ -3,29 +3,29 @@ package pl.sda.view;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.sda.dao.RunnerDAO;
+import pl.sda.dao.EmployeeDAO;
 import pl.sda.dao.TestEntityManagerFactoryService;
-import pl.sda.dto.Runner;
+import pl.sda.dto.Employee;
 
 import java.util.List;
 
-class RunnerManagerTest {
-    private RunnerDAO runnerDAO;
-    private RunnerManager runnerManager;
+class EmployeeManagerTest {
+    private EmployeeDAO employeeDAO;
+    private EmployeeManager employeeManager;
 
     @BeforeEach
     void setUp() {
         TestEntityManagerFactoryService.start();
-        runnerDAO = new RunnerDAO(TestEntityManagerFactoryService.getInstance());
-        runnerManager = new RunnerManager();
+        employeeDAO = new EmployeeDAO(TestEntityManagerFactoryService.getInstance());
+        employeeManager = new EmployeeManager();
     }
 
     @Test
     void shouldPrintRunners() {
         //given
-        List<Runner> runners = runnerManager.fetchRunners(runnerDAO);
+        List<Employee> employees = employeeManager.fetchEmployees(employeeDAO);
         //when
-        runnerManager.printList(runners);
+        employeeManager.printList(employees);
     }
 
     @AfterEach

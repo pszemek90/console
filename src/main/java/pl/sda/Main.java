@@ -1,11 +1,6 @@
 package pl.sda;
 
-import pl.sda.dao.RunnerDAO;
-import pl.sda.dto.Runner;
 import pl.sda.view.ConsoleManager;
-
-import java.io.IOException;
-import java.time.LocalTime;
 
 public class Main {
 

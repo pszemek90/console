@@ -1,6 +1,6 @@
 package pl.sda.dao;
 
-import pl.sda.dto.Runner;
+import pl.sda.dto.Task;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -8,52 +8,51 @@ import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
-public class RunnerDAO implements DAO<Runner>{
+public class TaskDAO implements DAO<Task> {
     private EntityManagerFactory entityManagerFactory;
 
-    public RunnerDAO(EntityManagerFactory entityManagerFactory) {
+    public TaskDAO(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
-    public void create(Runner runner) {
+    public boolean create(Task task) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        try{
-        entityManager.getTransaction().begin();
-        entityManager.persist(runner);
-        entityManager.getTransaction().commit();
-        }catch (PersistenceException exception){
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.persist(task);
+            entityManager.getTransaction().commit();
+        } catch (PersistenceException exception) {
             entityManager.getTransaction().rollback();
-            System.out.println("Couldn't create a user");
+            System.out.println("Couldn't create a task");
+            entityManager.close();
+            return false;
         }
         entityManager.close();
+        return true;
     }
 
     @Override
-    public Optional<Runner> read(int id) {
+    public Optional<Task> read(int id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Optional<Runner> optionalRunner = Optional.ofNullable(entityManager.find(Runner.class, id));
+        Optional<Task> optionalTask = Optional.ofNullable(entityManager.find(Task.class, id));
         entityManager.close();
-        return optionalRunner;
+        return optionalTask;
     }
 
     @Override
-    public List<Runner> readAll() {
+    public List<Task> readAll() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        List<Runner> runners = entityManager.createQuery("SELECT r FROM Runner r", Runner.class).getResultList();
+        List<Task> tasks = entityManager.createQuery("FROM Task t", Task.class).getResultList();
         entityManager.close();
-        return runners;
+        return tasks;
     }
 
     @Override
-    public void update(int id, Runner newRunner) {
+    public void update(int id, Task newTask) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        Runner oldRunner = entityManager.find(Runner.class, id);
-        oldRunner.setFirstName(newRunner.getFirstName());
-        oldRunner.setLastName(newRunner.getLastName());
-        oldRunner.setBestTime(newRunner.getBestTime());
-        oldRunner.setCurrentTime(newRunner.getCurrentTime());
+        Task oldTask = entityManager.find(Task.class, id);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -62,8 +61,8 @@ public class RunnerDAO implements DAO<Runner>{
     public void delete(int id) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        Runner runner = entityManager.find(Runner.class, id);
-        entityManager.remove(runner);
+        Task task = entityManager.find(Task.class, id);
+        entityManager.remove(task);
         entityManager.getTransaction().commit();
         entityManager.close();
     }

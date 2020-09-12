@@ -1,8 +1,8 @@
 package pl.sda.view;
 
 import pl.sda.dao.EntityManagerFactoryService;
-import pl.sda.dao.RunnerDAO;
-import pl.sda.dto.Runner;
+import pl.sda.dao.EmployeeDAO;
+import pl.sda.dto.Employee;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.Scanner;
 
 public class ConsoleManager {
 
-    private RunnerManager runnerManager = new RunnerManager();
-    private RunnerDAO runnerDAO = new RunnerDAO(EntityManagerFactoryService.getInstance());
+    private EmployeeManager employeeManager = new EmployeeManager();
+    private EmployeeDAO employeeDAO = new EmployeeDAO(EntityManagerFactoryService.getInstance());
 
     public void start() {
         char userChoice = ' ';
@@ -26,8 +26,8 @@ public class ConsoleManager {
     private void printMenu() {
         clrscr();
         System.out.println("Menu:");
-        System.out.println("1 - Lista zawodników");
-        System.out.println("2 - Dodaj zawodnika");
+        System.out.println("1 - Lista pracowników");
+        System.out.println("2 - Dodaj pracownika");
         System.out.println();
         System.out.println("q - Wyjście");
     }
@@ -46,13 +46,12 @@ public class ConsoleManager {
     private void executeAction(char userChoice) {
         switch (userChoice) {
             case '1':
-                List<Runner> runners = runnerManager.fetchRunners(runnerDAO);
-                runnerManager.printList(runners);
+                List<Employee> runners = employeeManager.fetchEmployees(employeeDAO);
+                employeeManager.printList(runners);
                 pressEnterKeyToContinue();
                 break;
             case '2':
-                runnerManager.addRunner();
-
+                employeeManager.addEmployee(employeeDAO);
         }
     }
 
@@ -64,6 +63,5 @@ public class ConsoleManager {
     private char readChar() {
         Scanner s = new Scanner(System.in);
         return (char) s.nextLine().chars().findFirst().orElse(0);
-
     }
 }

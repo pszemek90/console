@@ -71,7 +71,7 @@ public class EmployeeDAO implements DAO<Employee> {
         entityManager.close();
     }
 
-    public int searchEmployeeByName(String firstName, String lastName) {
+    public Employee searchEmployeeByName(String firstName, String lastName) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         TypedQuery<Employee> query = entityManager
                 .createQuery("SELECT e FROM Employee e WHERE e.firstName = :firstName AND e.lastName = :lastName", Employee.class);
@@ -79,7 +79,7 @@ public class EmployeeDAO implements DAO<Employee> {
         query.setParameter("lastName", lastName);
         Employee employee = query.getSingleResult();
         entityManager.close();
-        return employee.getId();
+        return employee;
     }
 
     @Override

@@ -12,7 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskDAOTest {
     private TaskDAO taskDAO;
-    private Integer id;
+    private EmployeeDAO employeeDAO;
+    private Integer taskId;
+    private Integer employeeId;
 
     @BeforeAll
     static void beforeAll() {
@@ -29,7 +31,11 @@ class TaskDAOTest {
         taskDAO = new TaskDAO(TestEntityManagerFactoryService.getInstance());
         Task task = new Task("porządek", "zrobić porządek w konferencyjnym");
         taskDAO.create(task);
-        id = task.getId();
+        taskId = task.getId();
+        Employee employee = new Employee("Janusz", "Korczak", "pisarz", 1000, 1840);
+        employeeDAO = new EmployeeDAO(TestEntityManagerFactoryService.getInstance());
+        employeeDAO.create(employee);
+        employeeId = employee.getId();
     }
 
     @Test
@@ -52,9 +58,9 @@ class TaskDAOTest {
     @Test
     void shouldReadTask() {
         //when
-        Optional<Task> optionalTask = taskDAO.read(id);
+        Optional<Task> optionalTask = taskDAO.read(taskId);
         //then
-        assertEquals(id, optionalTask.map(Task::getId)
+        assertEquals(taskId, optionalTask.map(Task::getId)
                 .orElseThrow(NoSuchElementException::new));
     }
 
@@ -62,30 +68,38 @@ class TaskDAOTest {
     void shouldDeleteEmployee() {
         //when
         try {
-            taskDAO.delete(id);
+            taskDAO.delete(taskId);
         } catch (IllegalArgumentException e) {
             System.out.println("No such entity");
         }
         //then
-        assertEquals(Optional.empty(), taskDAO.read(id));
+        assertEquals(Optional.empty(), taskDAO.read(taskId));
     }
 
     @Test
     void shouldAddEmployeeToTaskList(){
-        //given
-        Employee employee = new Employee("Janusz", "Korczak", "pisarz", 1000, 1840);
-        EmployeeDAO employeeDAO = new EmployeeDAO(TestEntityManagerFactoryService.getInstance());
-        employeeDAO.create(employee);
         //when
-        taskDAO.addEmployeeToTask(employee.getId(), id);
-        Task task = taskDAO.read(id).orElseThrow(NoSuchElementException::new);
+        taskDAO.addEmployeeToTask(employeeId, taskId);
+        Task task = taskDAO.read(taskId).orElseThrow(NoSuchElementException::new);
         Integer listSize = task.getEmployees().size();
         //then
         assertEquals(1, listSize);
     }
 
+    @Test
+    void shouldSearchTaskByEmployee(){
+        //given
+        taskDAO.addEmployeeToTask(employeeId, taskId);
+        Task task = taskDAO.read(taskId).orElseThrow();
+        //when
+        List<Task> tasks = taskDAO.searchTaskByEmployee(employeeId);
+        //then
+        assertTrue(tasks.contains(task));
+    }
+
     @AfterEach
     void tearDown() {
         taskDAO.deleteAll();
+        employeeDAO.deleteAll();
     }
 }

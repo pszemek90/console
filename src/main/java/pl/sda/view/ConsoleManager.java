@@ -2,7 +2,9 @@ package pl.sda.view;
 
 import pl.sda.dao.EntityManagerFactoryService;
 import pl.sda.dao.EmployeeDAO;
+import pl.sda.dao.TaskDAO;
 import pl.sda.dto.Employee;
+import pl.sda.dto.Task;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +13,9 @@ import java.util.Scanner;
 public class ConsoleManager {
 
     private EmployeeManager employeeManager = new EmployeeManager();
+    private TaskManager taskManager = new TaskManager();
     private EmployeeDAO employeeDAO = new EmployeeDAO(EntityManagerFactoryService.getInstance());
+    private TaskDAO taskDAO = new TaskDAO(EntityManagerFactoryService.getInstance());
 
     public void start() {
         char userChoice = ' ';
@@ -28,6 +32,8 @@ public class ConsoleManager {
         System.out.println("Menu:");
         System.out.println("1 - Lista pracowników");
         System.out.println("2 - Dodaj pracownika");
+        System.out.println("3 - Lista zadań");
+        System.out.println("4 - Dodaj zadanie");
         System.out.println();
         System.out.println("q - Wyjście");
     }
@@ -52,6 +58,15 @@ public class ConsoleManager {
                 break;
             case '2':
                 employeeManager.addEmployee(employeeDAO);
+                break;
+            case '3':
+                List<Task> tasks = taskManager.fetchTasks(taskDAO);
+                taskManager.printList(tasks);
+                pressEnterKeyToContinue();
+                break;
+            case '4':
+                taskManager.addTask(taskDAO);
+                break;
         }
     }
 

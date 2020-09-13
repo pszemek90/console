@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EmployeeDAOTest {
     private EmployeeDAO employeeDAO;
-    private Integer id;
+    private Integer employeeId;
 
     @BeforeAll
     static void beforeAll() {
@@ -29,7 +29,7 @@ class EmployeeDAOTest {
         employeeDAO = new EmployeeDAO(TestEntityManagerFactoryService.getInstance());
         Employee employee = new Employee("Jan", "Kowalski", "Tester", 4000, 1995);
         employeeDAO.create(employee);
-        id = employee.getId();
+        employeeId = employee.getId();
     }
 
     @Test
@@ -52,9 +52,9 @@ class EmployeeDAOTest {
     @Test
     void shouldReadEmployee() {
         //when
-        Optional<Employee> optionalEmployee = employeeDAO.read(id);
+        Optional<Employee> optionalEmployee = employeeDAO.read(employeeId);
         //then
-        assertEquals(id, optionalEmployee.map(Employee::getId)
+        assertEquals(employeeId, optionalEmployee.map(Employee::getId)
                 .orElseThrow(NoSuchElementException::new));
     }
 
@@ -72,7 +72,7 @@ class EmployeeDAOTest {
         //given
         Employee newEmployee = new Employee("Adrian", "Nowak", "Developer", 8000, 1980);
         //when
-        employeeDAO.update(id, newEmployee);
+        employeeDAO.update(employeeId, newEmployee);
     }
 
     @Test
@@ -80,19 +80,27 @@ class EmployeeDAOTest {
         //given
         Employee newEmployee = new Employee(null, "Nowak", "Developer", 6000, 1980);
         //when
-        assertThrows(RollbackException.class, () -> employeeDAO.update(id, newEmployee));
+        assertThrows(RollbackException.class, () -> employeeDAO.update(employeeId, newEmployee));
     }
 
     @Test
     void shouldDeleteEmployee() {
         //when
         try {
-            employeeDAO.delete(id);
+            employeeDAO.delete(employeeId);
         } catch (IllegalArgumentException e) {
             System.out.println("No such entity");
         }
         //then
-        assertEquals(Optional.empty(), employeeDAO.read(id));
+        assertEquals(Optional.empty(), employeeDAO.read(employeeId));
+    }
+
+    @Test
+    void shouldFindEmployeeByName(){
+        //when
+        Employee employee = employeeDAO.searchEmployeeByName("Jan", "Kowalski");
+        //then
+        assertEquals(employeeId, employee.getId());
     }
 
     @AfterEach

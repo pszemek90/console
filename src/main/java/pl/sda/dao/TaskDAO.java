@@ -88,10 +88,11 @@ public class TaskDAO implements DAO<Task> {
         entityManager.close();
     }
 
-    public List<Task> searchTaskByEmployee(Integer id){
+    public List<Task> searchTaskByEmployee(Integer employeeId){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        TypedQuery<Task> query = entityManager.createQuery("select distinct t from Task t join t.employees employees where employees.id = :id", Task.class);
-        query.setParameter("id", id);
+        TypedQuery<Task> query = entityManager
+                .createQuery("select distinct t from Task t join t.employees employees where employees.id = :id", Task.class);
+        query.setParameter("id", employeeId);
         List<Task> tasks = query.getResultList();
         entityManager.close();
         return tasks;

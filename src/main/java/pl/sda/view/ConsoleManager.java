@@ -30,12 +30,12 @@ public class ConsoleManager {
     private void printMenu() {
         clrscr();
         System.out.println("Menu:");
-        System.out.println("1 - Lista pracowników");
-        System.out.println("2 - Dodaj pracownika");
-        System.out.println("3 - Lista zadań");
-        System.out.println("4 - Dodaj zadanie");
+        System.out.println("1 - Employee list");
+        System.out.println("2 - Add employee");
+        System.out.println("3 - Task list");
+        System.out.println("4 - Add task");
         System.out.println();
-        System.out.println("q - Wyjście");
+        System.out.println("q - Quit");
     }
 
     public static void clrscr() {
@@ -54,6 +54,9 @@ public class ConsoleManager {
             case '1':
                 List<Employee> employees = employeeManager.fetchEmployees(employeeDAO);
                 employeeManager.printList(employees);
+                printMenuForEmployeeList();
+                userChoice = readChar();
+                chooseEmployeeListSubmenuOption(userChoice);
                 pressEnterKeyToContinue();
                 break;
             case '2':
@@ -62,6 +65,9 @@ public class ConsoleManager {
             case '3':
                 List<Task> tasks = taskManager.fetchTasks(taskDAO);
                 taskManager.printList(tasks);
+                printMenuForTaskList();
+                userChoice = readChar();
+                chooseTaskListSubmenuOption(userChoice);
                 pressEnterKeyToContinue();
                 break;
             case '4':
@@ -69,6 +75,35 @@ public class ConsoleManager {
                 break;
         }
     }
+
+    private void chooseEmployeeListSubmenuOption(char userChoice) {
+        switch (userChoice){
+            case '1':
+                taskManager.findTasksByEmployee(taskDAO);
+                break;
+            default:
+                System.out.println("Wrong option!");
+        }
+    }
+
+    private void printMenuForEmployeeList() {
+        System.out.println("1 - Find employees tasks");
+    }
+
+    private void chooseTaskListSubmenuOption(char userChoice) {
+        switch (userChoice){
+            case '1':
+                taskManager.addEmployeeToTask(taskDAO);
+                break;
+            default:
+                System.out.println("Wrong option!");
+        }
+    }
+
+    private void printMenuForTaskList() {
+        System.out.println("1 - Add employee to task");
+    }
+
 
     public void pressEnterKeyToContinue() {
         System.out.println("Press Enter key to continue...");

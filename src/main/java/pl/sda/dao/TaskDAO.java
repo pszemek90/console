@@ -77,7 +77,7 @@ public class TaskDAO implements DAO<Task> {
         entityManager.close();
     }
 
-    public void addEmployeeToTask(int employeeId, int taskId){
+    public void addEmployeeToTask(Integer employeeId, Integer taskId){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Employee employee = entityManager.find(Employee.class, employeeId);

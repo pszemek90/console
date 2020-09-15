@@ -16,25 +16,25 @@ public class EmployeeManager {
     public void printList(List<Employee> employees) {
         TablePrinter<Employee> tablePrinter = new TablePrinter<Employee>()
                 .withData(employees)
-                .withColumn("Imię", Employee::getFirstName)
-                .withColumn("Nazwisko", Employee::getLastName)
-                .withColumn("Stanowisko", Employee::getPosition)
-                .withColumn("Wynagrodzenie", employee -> employee.getSalary().toString())
-                .withColumn("Rok urodzenia", employee -> employee.getBirthYear().toString());
+                .withColumn("First name", Employee::getFirstName)
+                .withColumn("Last name", Employee::getLastName)
+                .withColumn("Position", Employee::getPosition)
+                .withColumn("Salary", employee -> employee.getSalary().toString())
+                .withColumn("Birth year", employee -> employee.getBirthYear().toString());
         tablePrinter.printTable();
     }
 
     public void addEmployee(EmployeeDAO employeeDAO) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Podaj imię: ");
+        System.out.println("Set first name: ");
         String firstName = scanner.nextLine();
-        System.out.println("Podaj nazwisko: ");
+        System.out.println("Set last name: ");
         String lastName = scanner.nextLine();
-        System.out.println("Podaj stanowisko ");
+        System.out.println("Set position: ");
         String position = scanner.nextLine();
-        System.out.println("Podaj wynagrodzenie: ");
+        System.out.println("Set salary: ");
         Integer salary = Integer.parseInt(scanner.nextLine());
-        System.out.println("Podaj rok urodzenia: ");
+        System.out.println("Set birth year: ");
         Integer birthYear = Integer.parseInt(scanner.nextLine());
         employeeDAO.create(new Employee(firstName, lastName, position, salary, birthYear));
     }

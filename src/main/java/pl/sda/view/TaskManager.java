@@ -18,9 +18,9 @@ public class TaskManager {
     public void printList(List<Task> tasks) {
         TablePrinter<Task> tablePrinter = new TablePrinter<Task>()
                 .withData(tasks)
-                .withColumn("Nazwa", Task::getName)
-                .withColumn("Opis", Task::getDescription)
-                .withColumn("Lista pracowników", task -> task.getEmployees()
+                .withColumn("Name", Task::getName)
+                .withColumn("Description", Task::getDescription)
+                .withColumn("Employees list", task -> task.getEmployees()
                         .stream()
                         .map(Employee::getId)
                         .collect(Collectors.toList())
@@ -30,10 +30,26 @@ public class TaskManager {
 
     public void addTask(TaskDAO taskDAO) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Podaj nazwę: ");
+        System.out.println("Set name: ");
         String name = scanner.nextLine();
-        System.out.println("Podaj opis: ");
+        System.out.println("Set description: ");
         String description = scanner.nextLine();
         taskDAO.create(new Task(name, description));
+    }
+
+    public void addEmployeeToTask(TaskDAO taskDAO){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Set task id");
+        Integer taskId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Set employees id");
+        Integer employeeId = Integer.parseInt(scanner.nextLine());
+        taskDAO.addEmployeeToTask(employeeId, taskId);
+    }
+
+    public void findTasksByEmployee(TaskDAO taskDAO){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Set employees id:");
+        Integer employeeId = Integer.parseInt(scanner.nextLine());
+        taskDAO.searchTaskByEmployee(employeeId);
     }
 }
